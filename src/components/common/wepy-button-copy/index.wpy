@@ -1,0 +1,46 @@
+<style lang="less">
+</style>
+<template>
+    <button class="{{className}}" @tap="setClipboardData">
+        <slot name="button"></slot>
+    </button>
+</template>
+<script>
+import wepy from 'wepy';
+export default class buttonCopy extends wepy.component {
+  props = {
+    content: {
+      type: String,
+      default: '',
+    },
+    className: {
+      type: String,
+      default: 'btn',
+    },
+    tap:{
+        type:Function,
+        default:()=>{}
+    }
+  }
+  data = {
+  }
+  methods = {
+
+      setClipboardData(){
+          const  self = this;
+          wx.setClipboardData({
+              data:this.content,
+              success(){
+                  self.$emit('tap',{code:0,content:`${self.content}`});
+              },
+              fail(){
+                  self.$emit('tap',{code:110,content:`${self.content}`});
+              }
+          });
+      },
+  }
+  onLoad() {
+
+  }
+}
+</script>

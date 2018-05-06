@@ -1,0 +1,16 @@
+{
+  "name": "@meitu/wepy-button-copy",
+  "version": "0.0.4",
+  "description": "wepy-button-copy",
+  "keywords": [
+    "wepy-button-copy",
+    "copy",
+    "button-copy"
+  ],
+  "main": "index.wpy",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zhy",
+  "license": "ISC"
+}

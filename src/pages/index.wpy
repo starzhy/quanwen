@@ -1,0 +1,158 @@
+<style lang="less">
+.news-tab {
+    height: 80rpx;
+    .tab-content{
+        padding:0;
+        background: #efefef;
+    }
+    .tab-item{
+        line-height: 80rpx;
+        margin:0;
+        padding:0 28rpx;
+        &.selected {
+            color: #c34641;
+            &::after {
+                display: none;
+            }
+        }
+    } 
+}
+.container{
+  overflow: hidden;
+  background-color: #fff;
+  padding-top: 10rpx;
+  .news-card{
+    padding:30rpx 20rpx;
+    color: #333;
+    border-bottom: 1px solid #ededed;
+    .tit{
+      font-size:32rpx;
+    }
+    .cc{
+      color: #828282;
+      font-size: 26rpx;
+      padding:10rpx 0;
+      display: flex;
+      image{
+        flex:1;
+        margin-left: 15rpx;
+        max-height: 360rpx;
+        &:first-child{
+          margin-left: 0;
+        }
+      }
+    }
+    .bottom{
+      color: #828282;
+      font-size: 12px;
+      display: flex;
+      justify-content: space-between;
+      .ico{
+        width:32rpx;
+        height:32rpx;
+        vertical-align: middle;
+        margin: 0 5rpx 0 10rpx;
+      }
+      .gray{
+        color:#ccc;
+      }
+      .red{
+        color: #c34641;
+      }
+    }
+    &:last-child{
+      border-bottom:0;
+    }
+  }
+}
+</style>
+<template>
+  <tabs :tabs="tabs" @tap.user="onTabChange" class="news-tab"/>
+  <view class="container">
+    <navigator class="news-card" url="/pages/detail">
+      <view class="tit">50万码农评论：英语对于程序员有多重要！</view>
+      <view class="cc">
+        足不出户感受线上教学之便利，节约学习成本。紧密跟踪回访学习成果，你未学成，我不安心。提供录播机会，完善的合作机制，保证学而时习。 
+      </view>
+      <view class="bottom">
+        <text class="gray">来源：知乎精选</text>
+        <view>
+          <image src="/images/ico/view.png" class="ico"/>2224324
+          <image src="/images/ico/talk.png" class="ico"/>33
+        </view>
+      </view>
+    </navigator>
+    <navigator class="news-card"  url="/pages/detail">
+      <view class="tit">失传多年PAO学呢？</view>
+      <view class="cc">
+        <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" mode="aspectFill"/>
+        <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" mode="aspectFill"/>  
+        <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" mode="aspectFill"/>           
+      </view>
+      <view class="bottom">
+        <text class="gray">来源：知乎精选</text>
+        <view>
+          <image src="/images/ico/view.png" class="ico"/>2224324
+          <image src="/images/ico/talk.png" class="ico"/>33
+        </view>
+      </view>
+    </navigator>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy';
+import tabs from '@c/common/wepy-tabs/index';
+import loadPageData from '@/mixins/loadPageData';
+import { fetch } from '@/utils';
+
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '圈文'
+  };
+  components = {
+    tabs: tabs
+  };
+  mixins = [loadPageData,]
+  data = {
+    tabs: {
+      title: ['综合', '科技新闻', '微博热门', '知乎精选', '影视推荐'], //必填，['分类1','分类2','分类3',]
+      scroll: true, //是否可以滑动，默认false
+      fixed: false, //是否开启吸顶，默认false
+      selectedIndex: 0, //默认选中第几项，默认0
+      componentId: '', // 非必填
+      className: 'mt-tabs', // 默认'mt-tabs'
+      scrollWithAnimation: false //滚动时是否有过渡效果
+    },
+    list: {
+      "0":[],
+      "1":[],
+    },
+    count:20, //覆盖mixin中的10
+    firstLoaded: false
+  };
+
+  computed = {};
+
+  methods = {
+    onTabChange(index) {
+       
+    }
+  };
+  onShareAppMessage(res) {
+    return {
+      title: '圈文',
+      path: '/pages/index?from=share',
+      success: function(res) {
+        // 转发成功
+      },
+      fail: function(res) {
+        // 转发失败
+      }
+    }
+  }
+  onLoad() {
+    
+  }
+}
+</script>

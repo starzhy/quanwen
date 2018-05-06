@@ -1,0 +1,16 @@
+{
+  "name": "@meitu/wepy-tabs",
+  "version": "1.1.6",
+  "description": "wepy-tabs",
+  "keywords": [
+    "wepy-tabs",
+    "tabs",
+    "tab"
+  ],
+  "main": "index.wpy",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zhy",
+  "license": "ISC"
+}

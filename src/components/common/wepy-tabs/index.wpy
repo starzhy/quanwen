@@ -1,0 +1,107 @@
+<style lang="less">
+.tab {
+    height: 120rpx;
+}
+.tab-content {
+    display: flex;
+    flex-direction: row;
+    padding: 0 10rpx;
+    height: auto;
+    flex-direction: row;
+    background: #fff;
+    align-items: center;
+    font-size: 30rpx;
+    color: #474747;
+    white-space: nowrap;
+}
+.tab-fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: #fff;
+}
+.tab-item {
+    flex: 1;
+    display: inline-block;
+    margin: 0 30rpx;
+    line-height: 120rpx;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-align: center;
+    position: relative;
+    &.selected {
+        color: #fd6a9d;
+        &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 3rpx;
+            background-color: #fd6a9d;
+            left: 50%;
+            bottom: 22rpx;
+            transform: translateX(-50%);
+        }
+    }
+}
+</style>
+<template>
+<view class="tab {{tabs.className}} ">
+    <block wx:if="{{tabs.scroll}}">
+        <scroll-view data-component-id="{{ tabs.componentId }}"
+            class="tab-content tab-scroll {{ tabs.fixed ? 'tab-fixed' : '' }}"
+            scroll-into-view="__sub_view_{{tabs.selectedIndex}}"
+            scroll-x
+            scroll-with-animation="{{tabs.scrollWithAnimation}}">
+                <view
+                    wx:for="{{ tabs.title }}"
+                    wx:key="id" class="tab-item {{ tabs.selectedIndex == index ? 'selected' : '' }}"
+                    @tap="_handleTabChange({{index}})"
+                     id="__sub_view_{{index}}">
+                    <view class="tab-title">{{ item }}</view>
+                </view>
+        </scroll-view>
+    </block>
+    <block wx:else>
+        <view class="tab-content {{ tabs.fixed ? 'tab-fixed' : '' }}" data-component-id="{{ tabs.componentId }}">
+            <view
+                wx:for="{{ tabs.title }}" wx:index="index" wx:key="id"
+                class="tab-item {{ tabs.selectedIndex == index ? 'selected' : '' }}"
+                @tap="_handleTabChange({{index}})">
+                    <view class="tab-title">{{ item }}</view>
+            </view>
+        </view>
+    </block>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class Tab extends wepy.component {
+    props = {
+        tabs: {
+            type: Object,
+            default: {
+                list: [], //必填，['分类1','分类2','分类3',]
+                scroll: false, //是否可以滑动，默认false
+                fixed: false, //是否开启吸顶，默认false
+                selectedIndex: 0, //默认选中第几项，默认0
+                componentId: '', // 非必填
+                className: 'mt-tabs', // 默认'mt-tabs'
+                scrollWithAnimation:false,
+            }
+        },
+    }
+    data = {
+        winWidth: wx.getSystemInfoSync().windowWidth,
+    }
+    methods = {
+        _handleTabChange(index, e) {
+            if (this.tabs.selectedIndex === index) return;
+            this.tabs.selectedIndex = index;
+            this.$emit('tap', index)
+        },
+    }
+    onLoad() {}
+
+}
+</script>
