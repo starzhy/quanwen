@@ -1,0 +1,31 @@
+<style lang="less">
+ 
+</style>
+<template>
+<text>
+    {{timer}}
+</text>
+</template>
+<script>
+import wepy from 'wepy';
+export default class TimeAgo extends wepy.component {
+    props = {
+        timer: {
+            type: String,
+            default: '',
+        },
+    }
+    data = {
+    }
+    methods = {
+       
+    }
+    onLoad() {
+        console.log(this.timer);
+        setTimeout(()=>{
+            console.log('延迟',this.timer);
+        },1000)
+    }
+
+}
+</script>

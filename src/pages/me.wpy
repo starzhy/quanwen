@@ -1,0 +1,135 @@
+<style lang="less">
+@import "../less/app.less";
+.user-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.avatar {
+    width: 140rpx;
+    height: 140rpx;
+    border-radius: 100%; 
+    display: block; 
+    margin: 0 auto;
+}
+.user-area { 
+    height: 300rpx;
+    background: @color-black-light;
+    color: white;
+    .name {
+        line-height: 1;
+        color: @color-gray-light;
+        margin-top: 20rpx;
+    }
+    .ico {
+        width: 30rpx;
+        height: 30rpx;
+    }
+    text {
+        display: block;
+        font-size: 30rpx;
+        margin-top: 20rpx;
+        color: @color-gray;
+        text-align: center;
+    }
+    .gray {
+        margin-top: 5rpx;
+        color: @color-black-lighter-extra;
+        font-size: 28rpx;
+        &.mini {
+            font-size: 24rpx;
+        }
+    }
+}
+.menu {
+    .item {
+        height: 100rpx;
+        line-height: 100rpx;
+        padding: 0 20rpx 0 30rpx;
+        background: #fff;
+        border-bottom: 1px solid @color-gray-light;
+        position: relative;
+        .ico {
+            position: absolute;
+            right: 20rpx;
+            top: 36rpx;
+            width: 36rpx;
+            height: 36rpx;
+        }
+    }
+    &.switch{
+        margin-top: 20rpx;
+    }
+}
+</style>
+<template>
+<view class="user-area">
+    <block wx:if="{{userInfo.screen_name}}">
+        <image src="{{userInfo.avatar ? userInfo.avatar:'../images/avatar.png'}}" class="avatar" />
+        <view class="name">{{userInfo.screen_name}}
+            <image class="ico" src="../images/ico/female.png"  wx:if="{{userInfo.gender==1}}"/>
+            <image class="ico" src="../images/ico/female.png"  wx:else/>
+        </view> 
+    </block>
+    <view wx:else @tap="loginNow()">
+        <image src="../images/avatar.png" class="avatar" />
+        <text>点击头像登录</text>
+    </view>
+</view>
+<view class="menu">
+    
+</view> 
+</template>
+<script>
+import wepy from 'wepy';
+import { fetch, Account } from '@/utils'; 
+
+export default class Me extends wepy.page {
+  config = {
+    navigationBarTitleText: '个人中心'
+  };
+  components = {  }; 
+  data = {
+    couponLength: 0,
+    userInfo: { }, 
+  };
+  events = {};
+  methods = {
+    buttonMenu(e) {
+      const url = e.currentTarget.dataset.url;
+      if (Account.is.login() && this.userInfo) {
+        wx.navigateTo({
+          url
+        });
+      } else {
+        wx.navigateTo({
+          url: `/pages/me/login?redirectUri=${url}`
+        });
+      }
+    },
+    loginNow() {
+      Account.login().then(data => {
+        this.loginSuccess(data);
+      });
+    }
+  };
+  loginSuccess(data) {
+    this.userInfo = data.userInfo;
+    this.$apply();
+  }
+
+  onLoad() {
+    let userInfo = wx.getStorageSync('qw_userInfo');
+    if (Account.isLogin() && userInfo) {
+      this.loginSuccess({
+        userInfo,
+      });
+    } else {
+      Account.login().then(data => {
+        this.loginSuccess(data); 
+      });
+    }
+  }
+}
+</script>

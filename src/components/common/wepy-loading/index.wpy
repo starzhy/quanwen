@@ -1,0 +1,72 @@
+<style lang="less">
+.loading-cc{
+  padding:10rpx 0; 
+  text-align: center;
+  .loading-inner{
+      display: flex;
+      justify-content: center;
+      color: #afafaf;
+      
+      font-size: 26rpx;
+      .text{
+          line-height: 46rpx;
+      }
+      .circle{
+        width: 50rpx;
+        height: 50rpx;
+        line-height: 44rpx;
+        margin: 0 10px; 
+        font-weight: bold;
+        // color:#c34641;
+        // border: 2px dashed #c34641;
+        border:2px dashed #afafaf;
+        border-radius:100%;
+        box-sizing: border-box;
+        animation: loading-cc 2s .2s cubic-bezier(.17,.37,.43,.67) infinite;
+    }
+  }
+} 
+
+@keyframes loading-cc {
+    0% {transform: rotate(0deg);}
+    50% {transform: rotate(180deg);}
+    100% {transform: rotate(360deg);}
+}
+</style>
+<template>
+<view class="loading-cc" style="display:{{ show ? 'block':'none'}}">
+    <view class="loading-inner">
+        <view class="circle">文</view>
+        <view class="text">{{text}}</view>
+    </view>
+</view>
+</template>
+<script>
+import wepy from 'wepy';
+export default class Loading extends wepy.component {
+    props = {
+        show: {
+            type: Boolean,
+            default: false
+        },
+        class: {
+            type: String,
+            default: ''
+        },
+        text: {
+            type: String,
+            default: ''
+        },
+    }
+    data = {
+         
+    }
+    methods = {
+      
+    }
+    onLoad() {
+    
+    }
+
+}
+</script>

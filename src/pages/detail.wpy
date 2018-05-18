@@ -1,17 +1,21 @@
 <style lang="less">
+@import '../wxParse/wxParse.wxss';
+@import '../less/app.less';
 page {
   background: #fff;
+  padding-bottom: 100rpx;
 }
 .container {
-  padding: 20rpx;
+  width:100%;
   box-sizing: border-box;
+  padding: 20rpx 20rpx;
   .title {
-    font-size: 36rpx;
-    text-align: center;
+    font-size: 38rpx;
+    text-align: left;
     padding: 15rpx 0;
   }
   .desc {
-    color: #828282;
+    color: @color-gray;
     font-size: 12px;
     display: flex;
     justify-content: center;
@@ -26,15 +30,17 @@ page {
     }
   }
   .article {
-    margin: 10rpx auto;
+    margin: 30rpx auto;
     text-indent: 46rpx;
-    line-height: 1.68;
-    color: #666;
+    line-height: 1.7;
+    color: @color-black-light;
     word-break: break-all;
     word-wrap: break-word;
-    font-size: 28rpx;
+    font-size: 32rpx;
+    min-height: 500rpx;
     view {
       text-indent: 20rpx;
+      margin-top: 30rpx;
     }
   }
 
@@ -42,32 +48,12 @@ page {
   .footer {
     text-align: left;
     margin-top: 40rpx;
-    padding-top: 25rpx;
-    color: #828282;
+    padding-top: 10rpx;
+    color: @color-gray;
     font-size: 22rpx;
     display: flex;
     align-items: center;
-    border-top: 1px solid #efefef;
-    .avatar {
-      width: 80rpx;
-      height: 80rpx;
-      border-radius: 100%;
-      margin-right: 16rpx;
-    }
-    .name {
-      padding-left: 3rpx;
-      color: #666;
-      font-size: 26rpx;
-    }
-    .date {
-      color: #ccc;
-    }
-    .ico {
-      width: 32rpx;
-      height: 32rpx;
-      vertical-align: middle;
-      margin: 0 5rpx;
-    }
+    border-top: 1px solid @color-gray-light;
   }
 
   /*评论*/
@@ -75,7 +61,7 @@ page {
     text-align: left;
     line-height: 1.3;
     font-size: 26rpx;
-    color: #666;
+    color: #666; 
     .tit {
       color: #c34641;
       margin-top: 60rpx;
@@ -91,38 +77,70 @@ page {
     }
     .item {
       display: flex;
-      border-top: 1px solid #efefef;
-      padding: 20rpx 10rpx;
-      .info{
+      border-top: 1px solid @color-gray-light;
+      padding: 20rpx 0;
+      .info {
         padding-top: 5rpx;
       }
       .l {
-        display: flex;
-        width: 200rpx;
+        width: 68rpx;
         overflow: hidden;
+        .addr{
+          text-align: center;
+          font-size: 20rpx;
+          color: @color-black-lighter;
+          padding-top: 10rpx;
+        }
       }
       .r {
-        width: 500rpx;
+        flex:1;
         padding: 0 20rpx;
         word-break: break-all;
         word-wrap: break-word;
         font-size: 24rpx;
+        .rt{
+          display: flex;
+          justify-content: space-between;
+          margin-top: 4rpx;
+        }
+        .cb{
+          display: flex;
+          .reply{
+            color: rgb(117, 136, 216);
+            padding-left: 20rpx;
+          }
+        }
       }
       .avatar {
-        width: 60rpx;
-        height: 60rpx;
+        width: 68rpx;
+        height: 68rpx;
         border-radius: 100%;
-        margin-right: 10rpx;
-        vertical-align: middle;
+        display: block;
       }
       .name {
         padding-left: 3rpx;
-        color: #666;
+        font-size: 24rpx;
+        color:@color-gray;
+        .n{
+          color: #536998;
+        }
+        .red{
+          color:@color-primary;
+        }
+      }
+      .content{
+        padding:10rpx 0;
+      }
+      
+      .date {
+        color: @color-gray;
         font-size: 22rpx;
       }
-      .date {
-        color: #ccc;
-        font-size: 22rpx;
+
+      .item-sub{
+        .r{ 
+          padding-left:10rpx;
+        }
       }
     }
   }
@@ -132,23 +150,24 @@ page {
   position: fixed;
   width: 100%;
   height: 100rpx;
+  background: #fff;
   bottom: 0;
   left: 0;
-  border-top: 1px solid #efefef;
+  border-top: 1px solid @color-gray-light;
   display: flex;
   padding: 0 20rpx;
   input {
     height: 64rpx;
     line-height: 64rpx;
     width: 420rpx;
-    background:#efefef;
+    background: @color-gray-light;
     border-radius: 30rpx;
-    padding:0 10rpx;
-    margin:20rpx 10rpx 0 0;
+    padding: 0 20rpx;
+    margin: 20rpx 10rpx 0 0;
   }
-  .ico{
-    width:60rpx;
-    height:60rpx;
+  .ico {
+    width: 60rpx;
+    height: 60rpx;
   }
   button {
     padding: 0;
@@ -163,73 +182,105 @@ page {
     border-radius: 0;
     width: 70rpx;
     box-sizing: border-box;
-    margin:0 10rpx;
+    margin: 0 8rpx;
   }
-  
+}
+.loading {
+  margin: 50rpx auto;
+}
+.loading-more{
+  margin:10rpx auto;
+}
+.btn-back {
+    border: 0;
+    position: fixed;
+    background-image: url("data:image/png;base64,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");
+    width: 80rpx;
+    height: 80rpx;
+    border-radius: 100%;
+    right: 14rpx;
+    bottom: 130rpx;
+    z-index: 1;
+    background-size: 100%;
 }
 </style>
 <template>
-  <scroll-view class="container" scroll-y="{{scrollY}}" style="height:calc(100vh - 50px)">
-    <view class="title">50万码农评论：英语对于程序员有多重要！</view>
+  <loading :show.sync="showLoading" class="loading" wx:if="{{showLoading}}" text=""/>
+  <view class="container" wx:else>
+    <view class="title">{{detail.title}}</view>
     <view class="desc">
-        来源：知乎精选
-        <image src="/images/ico/view.png" class="ico"/>2224324
+        来源：{{detail.source}}
+        <image src="/images/ico/view.png" class="ico"/>{{detail.view_count}}
     </view>
+
     <view class="article">
-      lazy-load	Boolean	false	图片懒加载。只针对page与scroll-view下的image有效	1.5.0
-binderror	HandleEvent		当错误发生时，发布到 AppService 的事件名，事件对象event.detail = {errMsg: 'something wrong'}	
-bin
+      <import src="../wxParse/wxParse.wxml"/> 
+      <template is="wxParse" data="{{wxParseData:article.nodes}}"></template>
     </view>
-    <view class="footer">
-      <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" class="avatar"/>
-      <view>
-        <view class="name">鲁班村村长</view>
-        <view class="date">
-          2018-05-06
-        </view>
-      </view>
+    <view class="footer" >
+      <text wx:if="{{detail.author}}">作者:{{detail.author}}，</text> 发表于：{{detail.created_at}}
     </view>
     <view class="comment">
       <view class="tit">
-        <image src="/images/ico/talk-s.png" class="ico"/> 热议 (<text class="num">33</text>)
+        <image src="/images/ico/talk-s.png" class="ico"/> 热议 <block wx:if="{{detail.comment_count>0}}">(<text class="num">{{detail.comment_count}}</text>)</block>
       </view>
       <view class="content">
-         <view class="item">
-          <view class="l">
-            <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" class="avatar"/>
-            <view class="info">
-              <view class="name">鲁班村村长</view>
-              <view class="date">
-                福建，厦门
+        <block wx:if="{{commentList.length>0}}" >
+          <view class="item" wx:for="{{commentList}}" wx:key="commentList">
+            <view class="l">
+              <image src="{{item.user.avatar}}" class="avatar"/>
+              <view class="addr">
+                {{item.user.province}}
               </view>
             </view>
-          </view>
-          <view class="r">
-            像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦
-          </view>
-        </view>
-
-        <view class="item">
-          <view class="l">
-            <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" class="avatar"/>
-            <view class="info">
-              <view class="name">鲁班村村长</view>
-              <view class="date">
-                福建，厦门
+            <view class="r">
+              <view class="rt">
+                <view class="name"><text class="n">{{item.user.screen_name}}</text></view>
+                <view class="cb">
+                  <view class="date">
+                    {{timeAgo(item.created_at)}} 
+                  </view>
+                  <view wx:if="{{item.uid !=userInfo.id}}" data-comment-id="{{item.id}}" data-comment-index="{{index}}" data-comment-name="{{item.user.screen_name}}" @tap="buttonReply" class="reply">回复</view>
+                </view>
               </view>
+              <view class="content">{{item.content}}</view>
+              <!-- 次级评论 -->
+              <view class="item item-sub" wx:for="{{item.reply}}" wx:for-index="replyIndex" wx:key="replyList" wx:for-item="reply">
+                <view class="l">
+                  <image src="{{reply.user.avatar}}" class="avatar" mode="aspectFill"/>
+                  <view class="addr">
+                    {{reply.user.province}}
+                  </view>
+                </view>
+                <view class="r">
+                  <view class="rt">
+                    <view class="name"><text class="n">{{reply.user.screen_name}}</text> 回复 <text class="n">{{reply.reply_user.screen_name}}</text></view>
+                    <view class="cb">
+                      <view class="date">
+                        {{reply.created_at}} 
+                      </view>
+                      <view wx:if="{{reply.user.id !=userInfo.id}}" data-comment-id="{{reply.comment_id}}"  data-reply-id="{{reply.id}}" data-comment-index="{{index}}" data-comment-name="{{reply.user.screen_name}}" @tap="buttonReply" class="reply">回复</view>
+                    </view>
+                  </view>
+                  <view class="content">{{reply.content}}</view>
+                </view>
+              </view>
+              <!-- 次级评论结束 -->
             </view>
+            
           </view>
-          <view class="r">
-            像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦像我这么帅的，在其他游戏里都是主角哦
-          </view>
+        </block>
+        <view class="nodata" wx:else>
+          快来抢占沙发~
         </view>
       </view>
+      <loading :show.sync="showLoadingMore" class="loading-more"  text=""/>
     </view>
-  </scroll-view>
+  </view>
   <view class="fixed-bottom">
-    <input type="text" placeholder="说点什么..." class="input"/>
-    <button class="favorite">
-      <image src="/images/ico/favorite.png" class="ico"/>
+    <input type="text" placeholder="{{placeholder}}" focus="{{inputFocus}}" class="input" value="{{inputContent}}" @input="onInput" @confirm="onConfirm" @blur="onBlur" confirm-type="评论"/>
+    <button class="favorite" @tap="buttonAddFavorite" data-id="{{detail.id}}">
+      <image src="/images/ico/{{ detail.is_favorited ? 'favorite-s':'favorite'}}.png" class="ico"/>
     </button>
     <button class="favorite" open-type="share">
       <image src="/images/ico/share.png" class="ico"/>
@@ -238,47 +289,228 @@ bin
       <image src="/images/ico/share-circle.png" class="ico"/>
     </button>
   </view>
+  <navigator class="btn btn-back" url="/pages/index" open-type="switchTab" wx:if="{{fromSource=='share'}}" />
 </template>
 
 <script>
 import wepy from 'wepy';
 import { fetch } from '@/utils';
-
+import { News, Comment} from '@/api/index';
+import { timeAgo, } from '@/utils/index';
+import WxParse from '@/wxParse/wxParse.js';
+import Loading from '@c/common/wepy-loading/index';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '圈文',
-    disableScroll: true
   };
-  components = {};
+  components = {
+    loading: Loading
+  };
   mixins = [];
   data = {
-    list: {
-      '0': [],
-      '1': []
+    detail: {
+      title: '',
+      content: '',
+      is_favorited:false,
     },
-    count: 20, //覆盖mixin中的10
-    firstLoaded: false
+    articleId:'',
+    showLoading: true,
+    fromSource:'', 
+
+    /*评论 */
+    userInfo:{},
+    commentList: [],
+    commentAfter: '',
+    inputContent:'',
+    commentId:'',
+    commentIndex:'',
+    replyId:'', 
+    placeholder:'说点什么...',
+    inputFocus:false,
+    showLoadingMore:false,
   };
 
-  computed = {};
+  computed = {
+      textLength() {
+        const len = Math.ceil(this.inputContent.replace(/[^\x00-\xff]/g, '__').length / 2);
+        return len;
+    },
+   
+  }
 
   methods = {
-    onTabChange(index) {}
+    wxParseImgLoad(e) {},
+     timeAgo(s){
+      return 1111
+    },
+    buttonReply(e){
+        let dataset = e.currentTarget.dataset;
+        this.inputFocus = false; 
+        this.commentId = dataset.commentId;
+        this.replyId = dataset.replyId;
+        this.commentIndex = dataset.commentIndex; 
+        this.placeholder = `回复@${dataset.commentName}：`;
+        setTimeout(()=>{
+          this.inputFocus = true; 
+          this.$apply();
+        },100)
+    },
+    buttonAddFavorite(e){
+      let dataset = e.currentTarget.dataset; 
+      if(this.addFavoriting) return;
+      this.addFavoriting = true;
+      if(this.detail.is_favorited){
+        News.removeFavorite({
+          article_id:dataset.id,
+        }).then(data=>{
+          this.addFavoriting = false;
+          this.detail.is_favorited = false;
+          this.$apply();
+        }).catch(e=> this.addFavoriting = false);
+      }else{
+        News.addFavorite({
+          article_id:dataset.id,
+        }).then(data=>{
+          this.addFavoriting = false;
+          this.detail.is_favorited = true;
+          this.$apply();
+          wx.showToast({
+            title:'收藏成功',
+            icon:'none',
+          })
+        }).catch(e=> this.addFavoriting = false);
+      }
+      
+    },
+    onInput(e){
+      this.inputContent = e.detail.value.trim();
+       
+    },
+    onBlur(e){
+      let value = e.detail.value.trim();
+      if(value==''){
+        this.placeholder = '说点什么...';
+        this.commentId = '';
+        this.replyId = '';
+      }
+    },
+    onConfirm(e){
+      this.inputContent = this.inputContent.replace(this.placeholder,''); 
+      this.inputFocus = false;
+      if(this.textLength<1) return;
+      if(this.textLength>140){
+        wx.showToast({
+          title:'评论数字最多140个字',
+          icon:'none'
+        })
+        return;
+      }
+      Comment.create({
+        article_id:this.articleId,
+        comment_id: this.commentId,
+        reply_id: this.replyId,
+        content: this.inputContent,
+      }).then(data=>{
+          data.response.created_at = timeAgo(data.response.created_at);
+          if(this.commentId){
+            this.commentList[this.commentIndex].reply.push(data.response)
+          }else{ 
+            this.commentList.unshift(data.response)
+          }
+          this.commentId = '';
+          this.replyId = '';
+          this.inputContent = '';
+          this.placeholder = '说点什么...';
+          this.detail.comment_count++;
+          this.$apply();
+          
+          wx.showToast({
+            title:'Well Done, 若评论不自由，则赞美无意义~',
+            icon:'none',
+            duration:2000,
+          });
+      }).catch(e=>{
+          this.commentId = '';
+          this.replyId = '';
+          this.inputContent = '';
+          this.placeholder = '说点什么...';
+          this.$apply();
+      })
+    }
   };
-
+ 
   onShareAppMessage(res) {
     return {
       title: '圈文',
-      path: '/pages/detail?id=222&from=share',
+      path: `/pages/detail?id=${this.articleId}&fromSource=share`,
       success: function(res) {
         // 转发成功
       },
       fail: function(res) {
         // 转发失败
       }
-    }
+    };
   }
 
-  onLoad() {}
+  onLoad(options) {
+    //debug
+    // options.id = 5;
+    // options.fromSource ='share';
+
+    this.fromSource = options.fromSource || '';
+    this.articleId = options.id;
+    this.inputFocus = false;
+    //获取新闻详情
+    News.detail({
+      id: options.id
+    }).then(data => {
+      data.response.created_at = timeAgo(data.response.created_at);
+      this.detail = data.response;
+      WxParse.wxParse('article', 'html', this.detail.content, this, 5);
+      this.showLoading = false; 
+      this.$apply();
+    });
+    //获取第一页评论
+    this.getCommentList();
+
+    //获取登录用户uid
+    this.userInfo = wx.getStorageSync('qw_userInfo'); 
+    console.log(this.userInfo)
+  }
+  getCommentList() {
+    console.log({
+      article_id: this.articleId,
+      after: this.commentAfter,
+      limit: 20
+    })
+    Comment.getList({
+      article_id: this.articleId,
+      after: this.commentAfter,
+      limit: 20
+    }).then(data => { 
+      data.response.data.map(item=>{
+        item.created_at = timeAgo(item.created_at);
+        item.reply.map(reply=>{
+          reply.created_at = timeAgo(reply.created_at);
+        })
+      })
+      this.commentList = this.commentAfter
+        ? this.commentList.concat(data.response.data)
+        : data.response.data;
+      this.commentAfter = data.response.paging.cursors.after;
+      this.showLoadingMore = false; 
+      this.$apply();
+    });
+  }
+  onReachBottom() { 
+    this.showLoadingMore = true; 
+    if (this.commentAfter) {
+      this.getCommentList();
+    } else {
+      this.loadedAll = true;
+      this.showLoadingMore = false;
+      this.$apply();
+    }
+  }
 }
 </script>

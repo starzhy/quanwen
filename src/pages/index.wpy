@@ -1,102 +1,104 @@
 <style lang="less">
+@import '../less/app.less';
 .news-tab {
-    height: 80rpx;
-    .tab-content{
-        padding:0;
-        background: #efefef;
+  height: 80rpx;
+  .tab-content {
+    padding: 0;
+    background: @color-gray-light;
+  }
+  .tab-item {
+    line-height: 80rpx;
+    margin: 0;
+    padding: 0 28rpx;
+    &.selected {
+      color:@color-primary;
+      &::after {
+        display: none;
+      }
     }
-    .tab-item{
-        line-height: 80rpx;
-        margin:0;
-        padding:0 28rpx;
-        &.selected {
-            color: #c34641;
-            &::after {
-                display: none;
-            }
-        }
-    } 
+  }
 }
-.container{
+.container {
   overflow: hidden;
-  background-color: #fff;
   padding-top: 10rpx;
-  .news-card{
-    padding:30rpx 20rpx;
+  .news-card {
+    padding: 30rpx 20rpx;
     color: #333;
-    border-bottom: 1px solid #ededed;
-    .tit{
-      font-size:32rpx;
-    }
-    .cc{
-      color: #828282;
+    border-bottom: 1px solid @color-gray-light;
+    .tit {
+      font-size: 36rpx;
+      width: 710rpx;
+      height: 50rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    } 
+    .cc {
+      color: @color-black-lighter;
       font-size: 26rpx;
-      padding:10rpx 0;
+      padding: 10rpx 0;
       display: flex;
-      image{
-        flex:1;
+      image {
+        flex: 1;
         margin-left: 15rpx;
         max-height: 360rpx;
-        &:first-child{
+        &:first-child {
           margin-left: 0;
         }
       }
     }
-    .bottom{
-      color: #828282;
+    .bottom {
+      color: @color-black-lighter;
       font-size: 12px;
       display: flex;
       justify-content: space-between;
-      .ico{
-        width:32rpx;
-        height:32rpx;
+      .ico {
+        width: 32rpx;
+        height: 32rpx;
         vertical-align: middle;
         margin: 0 5rpx 0 10rpx;
       }
-      .gray{
-        color:#ccc;
+      .gray {
+        color: #ccc;
       }
-      .red{
-        color: #c34641;
+      .red {
+        color:@color-primary;
       }
     }
-    &:last-child{
-      border-bottom:0;
+    &:last-child {
+      border-bottom: 0;
     }
   }
 }
+ 
+
+
 </style>
 <template>
-  <tabs :tabs="tabs" @tap.user="onTabChange" class="news-tab"/>
+  <tabs :tabs="tabs" @tap.user="onTabChange"/>
   <view class="container">
-    <navigator class="news-card" url="/pages/detail">
-      <view class="tit">50万码农评论：英语对于程序员有多重要！</view>
-      <view class="cc">
-        足不出户感受线上教学之便利，节约学习成本。紧密跟踪回访学习成果，你未学成，我不安心。提供录播机会，完善的合作机制，保证学而时习。 
-      </view>
-      <view class="bottom">
-        <text class="gray">来源：知乎精选</text>
-        <view>
-          <image src="/images/ico/view.png" class="ico"/>2224324
-          <image src="/images/ico/talk.png" class="ico"/>33
-        </view>
-      </view>
-    </navigator>
-    <navigator class="news-card"  url="/pages/detail">
-      <view class="tit">失传多年PAO学呢？</view>
-      <view class="cc">
-        <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" mode="aspectFill"/>
-        <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" mode="aspectFill"/>  
-        <image src="https://mtshop1.meitudata.com/5a41f9eb4fae527308.jpg" mode="aspectFill"/>           
-      </view>
-      <view class="bottom">
-        <text class="gray">来源：知乎精选</text>
-        <view>
-          <image src="/images/ico/view.png" class="ico"/>2224324
-          <image src="/images/ico/talk.png" class="ico"/>33
-        </view>
-      </view>
-    </navigator>
+    <block wx:if="{{renderList.length>0}}">
+        <navigator class="news-card" wx:for="{{renderList}}" wx:key="newslist"  url="/pages/detail?id={{item.id}}" >
+          <view class="tit">{{item.title}}</view>
+          <view class="cc">
+            <block wx:if="{{item.cover.length>0}}">
+              <image src="{{cover}}" mode="aspectFill" wx:for="{{item.cover}}" wx:for-item="cover" wx:key="cover" />              
+            </block>
+            <block wx:else>{{item.description}}</block>
+          </view>
+          <view class="bottom">
+            <text class="gray">来源：{{item.source}}</text>
+            <view>
+              <image src="/images/ico/view.png" class="ico"/>{{item.view_count}}
+              <image src="/images/ico/talk.png" class="ico"/>{{item.comment_count}}
+            </view>
+          </view>
+        </navigator>
+    </block>
+    <view wx:elif="{{ renderList.length==0 && firstLoaded[cateId] }}" class="nodata">
+      暂时没有内容哦
+    </view>
+    <loading class="loading-more" :show.sync="showLoading" text=""/>
   </view>
 </template>
 
@@ -105,39 +107,57 @@ import wepy from 'wepy';
 import tabs from '@c/common/wepy-tabs/index';
 import loadPageData from '@/mixins/loadPageData';
 import { fetch } from '@/utils';
-
+import { News } from '@/api/index';
+import Loading from '@c/common/wepy-loading/index';
 export default class Index extends wepy.page {
   config = {
-    navigationBarTitleText: '圈文'
+    navigationBarTitleText: '圈文',
+    enablePullDownRefresh: true,
   };
   components = {
-    tabs: tabs
+    tabs: tabs,
+    loading:Loading,
+    'loading-more':Loading,
   };
-  mixins = [loadPageData,]
+  mixins = [loadPageData];
   data = {
     tabs: {
-      title: ['综合', '科技新闻', '微博热门', '知乎精选', '影视推荐'], //必填，['分类1','分类2','分类3',]
+      title: ['综合', '科技新闻', '微博热门', '知乎精选', '影视推荐'], //必填 
       scroll: true, //是否可以滑动，默认false
       fixed: false, //是否开启吸顶，默认false
       selectedIndex: 0, //默认选中第几项，默认0
       componentId: '', // 非必填
-      className: 'mt-tabs', // 默认'mt-tabs'
+      className: 'news-tab', // 默认'mt-tabs'
       scrollWithAnimation: false //滚动时是否有过渡效果
     },
     list: {
-      "0":[],
-      "1":[],
+      '0': [],
+      '1': []
     },
-    count:20, //覆盖mixin中的10
-    firstLoaded: false
+    renderList: [],
+    cateId:0,
+    loadNextPageTag:{},
+    showLoading:true,
+    limit: 5, //覆盖mixin中的10
+    firstLoaded: {
+
+    },
+     
   };
 
   computed = {};
 
   methods = {
     onTabChange(index) {
-       
-    }
+      this.cateId = index;  
+      if(this.list[index] && this.list[index].length>0){
+        this.renderList = this.list[index]; 
+      }else{
+        this.renderList = [];
+        this.showLoading = true; 
+        this.onLoad();
+      }
+    },
   };
   onShareAppMessage(res) {
     return {
@@ -149,10 +169,47 @@ export default class Index extends wepy.page {
       fail: function(res) {
         // 转发失败
       }
+    };
+  }
+  onLoad() { 
+    News.getList({
+      limit: this.limit,
+      after: this.loadNextPageTag[this.cateId],
+      cate_id: this.cateId,
+    }).then(data => { 
+      
+      if (this.loadNextPageTag[this.cateId]) {
+        this.list[this.cateId] = this.list[this.cateId].concat(
+          data.response.data
+        );
+      } else {
+        this.list[this.cateId] = data.response.data;
+      }
+      this.loadNextPageTag[this.cateId] = data.response.paging.cursors.after;
+      this.renderList = this.list[this.cateId];
+      this.firstLoaded[this.cateId] = true;
+      this.showLoading = false;
+      wx.hideNavigationBarLoading();
+      wx.stopPullDownRefresh();
+      this.$apply();
+    });
+  }
+
+  
+  onReachBottom() {
+    this.showLoading = true; 
+    if (this.loadNextPageTag[this.cateId]) {
+      this.onLoad();
+    } else {
+      this.loadedAll = true;
+      this.showLoading = false;
+      this.$apply();
     }
   }
-  onLoad() {
-    
+  onPullDownRefresh() {
+    wx.showNavigationBarLoading(); 
+    this.loadNextPageTag[this.cateId] = '';
+    this.onLoad();
   }
 }
 </script>

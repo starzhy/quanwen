@@ -44,13 +44,11 @@ const News = {
      * @param  {[Number，String]} id [新闻编号]
      * @return {[Promise]}
      */
-    detail(id) {
+    detail(options) {
         return new Promise((resolve, reject) => {
             fetch({
                 url: URL.newsDetail,
-                data: {
-                    id, 
-                },
+                data: options,
                 requiredLogin:false,
                 showLoading:(options.showLoading  || false),
             }).then(data => {
@@ -69,5 +67,56 @@ const News = {
             })
         })
     },
+
+    /**
+     * [addFavorite 添加收藏]
+     * @param  {[Number，String]} id [新闻编号]
+     * @return {[Promise]}
+     */
+    addFavorite(options) {
+        return new Promise((resolve, reject) => {
+            fetch({
+                url: URL.addNewsFavorite,
+                data: options,
+                requiredLogin: true,
+                showLoading: (options.showLoading || false),
+                method:'POST',
+            }).then(data => {
+                if (data.meta.code === 0) {
+                    resolve(data);
+                } else {
+                    reject(data);
+
+                }
+            }).catch(data => {
+                wx.showToast({
+                    title: '收藏失败，请稍后重试',
+                    icon: 'none',
+                })
+                reject(data);
+            })
+        })
+    },
+    removeFavorite(options){
+        return new Promise((resolve, reject) => {
+            fetch({
+                url: URL.removeNewsFavorite,
+                data: options,
+                requiredLogin: true,
+                showLoading: (options.showLoading || false),
+                method: 'POST',
+            }).then(data => {
+                if (data.meta.code === 0) {
+                    resolve(data);
+                } else {
+                    reject(data);
+
+                }
+            }).catch(data => {
+                
+                reject(data);
+            })
+        })
+    }
 }
 export default News;

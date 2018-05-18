@@ -9,7 +9,6 @@ export default class loadPageData extends wepy.mixin {
         loadedAll:false,
     };
     onReachBottom() {
-        
         if (this.currentPage < this.totalPages && !this.loadingMore) {
             this.loadingMore = true;
             this.currentPage++;

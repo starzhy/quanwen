@@ -1,0 +1,16 @@
+{
+  "name": "@meitu/wepy-loading",
+  "version": "1.0.0",
+  "description": "wepy-loading",
+  "keywords": [
+    "wepy-loading",
+    "loading",
+    "wx"
+  ],
+  "main": "index.wpy",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "zhy",
+  "license": "ISC"
+}
